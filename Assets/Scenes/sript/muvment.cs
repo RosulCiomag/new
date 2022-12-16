@@ -7,6 +7,7 @@ public class muvment : MonoBehaviour
     public float moveForce;
     public float jumpForce;
     public bool jumpTime = false;
+    public bool CanJump = false;
     bool hasSwithedLayers = false;
     // Start is called before the first frame update
     void Start()
@@ -32,46 +33,42 @@ public class muvment : MonoBehaviour
             GetComponent<Rigidbody>().velocity.z
         );
       }
+      if (Input.GetKey("w"))  
+      {
+        GetComponent<Rigidbody>().velocity = new Vector3(
+            GetComponent<Rigidbody>().velocity.x,
+            GetComponent<Rigidbody>().velocity.y,
+            moveForce * Time.deltaTime
+        );
+      }
+      if (Input.GetKey("s"))  
+      {
+        GetComponent<Rigidbody>().velocity = new Vector3(
+            GetComponent<Rigidbody>().velocity.x,
+            GetComponent<Rigidbody>().velocity.y,
+            -moveForce * Time.deltaTime
+        );
+      }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey("w") && jumpTime)  
+      if(CanJump==true)
+      {
+        if (Input.GetKey("space") && jumpTime)  
       {
         jumpTime = false;
         this.GetComponent<Rigidbody>().AddForce(new Vector3(0, jumpForce, 0));
       }
-      if (Input.GetKeyDown("space"))  
-      {
-        if(!hasSwithedLayers)
-        {
-        this.transform.position = new Vector3(
-          this.transform.position.x,
-          this.transform.position.y,
-          10
-        );
-        }
-        else{
-        this.transform.position = new Vector3(
-          this.transform.position.x,
-          this.transform.position.y,
-          0
-        );
-        }
-        hasSwithedLayers = !hasSwithedLayers;
       }
     }
 
     void OnCollisionEnter(Collision collision) {
       jumpTime = true;
-      if(collision.gameObject.name=="END")
+      if(collision.gameObject.name=="can you jump")
       {
-        this.transform.position = new Vector3(
-          202.29f,
-          this.transform.position.y,
-          this.transform.position.z
-        );
+      CanJump=true;
       }
     }
 }
